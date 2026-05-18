@@ -1,0 +1,1722 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hari Ini Makan Apa? - Random Ide Makan Indonesia</title>
+  <meta name="description" content="Bingung mau makan apa hari ini? Biar nggak debat sama diri sendiri — coba random makanan Indonesia favoritmu sekarang!" />
+  <meta property="og:title" content="Hari Ini Makan Apa? - Random Ide Makan Indonesia" />
+  <meta property="og:description" content="Bingung mau makan apa hari ini? Klik random dan temukan jawabannya!" />
+  <meta property="og:type" content="website" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap');
+
+    :root {
+      --cream: #FFF8F0;
+      --cream-dark: #F5EDE0;
+      --orange: #FF6B2C;
+      --orange-light: #FF9A62;
+      --orange-pale: #FFE8DA;
+      --red: #E84040;
+      --red-soft: #FF6060;
+      --yellow: #FFCA3A;
+      --yellow-pale: #FFF5D0;
+      --brown: #6B3A2A;
+      --brown-light: #A0614A;
+      --green: #3DAA6C;
+      --green-pale: #DFF5EB;
+      --text: #2D1A0E;
+      --text-muted: #8C6555;
+      --shadow: 0 8px 32px rgba(107,58,42,0.13);
+      --shadow-card: 0 4px 24px rgba(107,58,42,0.10);
+      --radius: 24px;
+      --radius-sm: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── BLOBS BG ── */
+    .blob-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.18;
+    }
+    .blob-1 { width: 420px; height: 420px; background: var(--orange); top: -120px; right: -120px; animation: drift 14s ease-in-out infinite alternate; }
+    .blob-2 { width: 320px; height: 320px; background: var(--yellow); bottom: 10%; left: -100px; animation: drift 18s ease-in-out infinite alternate-reverse; }
+    .blob-3 { width: 260px; height: 260px; background: var(--red-soft); top: 40%; right: 5%; animation: drift 22s ease-in-out infinite alternate; }
+    @keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(30px,20px) scale(1.08); } }
+
+    /* ── LAYOUT ── */
+    .container { max-width: 680px; margin: 0 auto; padding: 0 18px; position: relative; z-index: 1; }
+
+    /* ── HEADER ── */
+    header {
+      text-align: center;
+      padding: 56px 18px 32px;
+    }
+    .header-badge {
+      display: inline-block;
+      background: var(--orange-pale);
+      color: var(--orange);
+      font-weight: 800;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      border-radius: 100px;
+      margin-bottom: 18px;
+      border: 1.5px solid #FFD3B8;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 9vw, 4rem);
+      font-weight: 900;
+      line-height: 1.1;
+      color: var(--brown);
+      letter-spacing: -0.02em;
+    }
+    h1 span { color: var(--orange); }
+    .subtitle {
+      margin-top: 14px;
+      font-size: 1.08rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* ── HERO BUTTONS ── */
+    .hero-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+      margin-top: 32px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      border: none;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: transform 0.18s, box-shadow 0.18s, background 0.18s;
+      text-decoration: none;
+      letter-spacing: 0.01em;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:active { transform: scale(0.95); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--orange), #FF4500);
+      color: #fff;
+      padding: 18px 42px;
+      font-size: 1.15rem;
+      box-shadow: 0 6px 28px rgba(255,107,44,0.38);
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 36px rgba(255,107,44,0.45); }
+
+    .btn-bokek {
+      background: var(--yellow);
+      color: var(--brown);
+      padding: 14px 32px;
+      box-shadow: 0 4px 16px rgba(255,202,58,0.35);
+    }
+    .btn-bokek:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,202,58,0.45); }
+
+    .btn-secondary {
+      background: var(--cream-dark);
+      color: var(--brown);
+      padding: 12px 24px;
+      font-size: 0.9rem;
+      border: 1.5px solid #E8D4C4;
+    }
+    .btn-secondary:hover { background: #EDE0D4; }
+
+    .btn-sm {
+      padding: 9px 18px;
+      font-size: 0.82rem;
+    }
+
+    /* ── FILTERS ── */
+    .filter-section {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 28px;
+      border: 1.5px solid #F0E4D8;
+    }
+    .filter-section h2 {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--brown);
+      margin-bottom: 18px;
+    }
+    .filter-group { margin-bottom: 16px; }
+    .filter-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .filter-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chip {
+      padding: 8px 16px;
+      border-radius: 100px;
+      border: 1.5px solid #E8D4C4;
+      background: var(--cream);
+      color: var(--text-muted);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 0.84rem;
+      cursor: pointer;
+      transition: all 0.18s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .chip:hover { border-color: var(--orange-light); color: var(--orange); }
+    .chip.active {
+      background: var(--orange);
+      border-color: var(--orange);
+      color: #fff;
+      box-shadow: 0 3px 12px rgba(255,107,44,0.28);
+    }
+
+    /* ── RESULT CARD ── */
+    .result-area { margin-bottom: 32px; }
+
+    .result-card {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 30px 26px;
+      box-shadow: var(--shadow);
+      border: 2px solid var(--orange-pale);
+      position: relative;
+      overflow: hidden;
+      animation: popIn 0.45s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.85) translateY(20px); }
+      to   { opacity: 1; transform: scale(1)   translateY(0); }
+    }
+    .result-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--orange), var(--yellow), var(--red-soft));
+    }
+
+    .food-emoji {
+      font-size: 4.5rem;
+      text-align: center;
+      display: block;
+      margin-bottom: 12px;
+      animation: bounceIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes bounceIn {
+      from { transform: scale(0.5) rotate(-10deg); opacity: 0; }
+      to   { transform: scale(1)   rotate(0deg);   opacity: 1; }
+    }
+
+    .food-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--brown);
+      text-align: center;
+      margin-bottom: 6px;
+    }
+    .food-category {
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--orange);
+      margin-bottom: 22px;
+    }
+
+    .food-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+    .stat-item {
+      background: var(--cream);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      border: 1px solid #F0E4D8;
+    }
+    .stat-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .stat-value {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--brown);
+    }
+
+    .food-reason {
+      background: var(--yellow-pale);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      font-size: 0.92rem;
+      color: var(--brown);
+      font-weight: 600;
+      line-height: 1.5;
+      border-left: 4px solid var(--yellow);
+      margin-bottom: 22px;
+    }
+
+    .result-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    /* ── FALLBACK ── */
+    .fallback-card {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 40px 26px;
+      text-align: center;
+      box-shadow: var(--shadow-card);
+      border: 2px dashed #E8D4C4;
+      animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .fallback-emoji { font-size: 3.5rem; margin-bottom: 14px; display: block; }
+    .fallback-card h3 { font-size: 1.2rem; font-weight: 900; color: var(--brown); margin-bottom: 8px; }
+    .fallback-card p { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; }
+
+    /* ── SECTION TITLE ── */
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--brown);
+      margin-bottom: 16px;
+    }
+    .section-title span { color: var(--orange); }
+
+    /* ── TOP 5 ── */
+    .top5-section { margin-bottom: 40px; }
+    .top5-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .top5-item {
+      background: #fff;
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: var(--shadow-card);
+      border: 1.5px solid #F0E4D8;
+      transition: transform 0.15s;
+      cursor: default;
+    }
+    .top5-item:hover { transform: translateX(6px); }
+    .top5-rank {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--orange);
+      width: 36px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .top5-emoji { font-size: 1.8rem; flex-shrink: 0; }
+    .top5-info { flex: 1; }
+    .top5-name { font-weight: 800; color: var(--brown); font-size: 1rem; }
+    .top5-desc { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+
+    /* ── MIDNIGHT ── */
+    .midnight-section { margin-bottom: 48px; }
+    .midnight-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .midnight-card {
+      background: #1A0F0A;
+      border-radius: var(--radius-sm);
+      padding: 18px 16px;
+      text-align: center;
+      transition: transform 0.18s;
+      cursor: default;
+    }
+    .midnight-card:hover { transform: translateY(-4px); }
+    .midnight-card-emoji { font-size: 2rem; margin-bottom: 8px; display: block; }
+    .midnight-card-name { font-weight: 800; color: #FFF8F0; font-size: 0.9rem; }
+    .midnight-card-note { font-size: 0.72rem; color: #A07060; font-weight: 600; margin-top: 4px; }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--brown);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 100px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      z-index: 9999;
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      white-space: nowrap;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 28px 18px 40px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    footer a { color: var(--orange); text-decoration: none; }
+
+    /* ── UTIL ── */
+    .hidden { display: none !important; }
+    .mt-8 { margin-top: 8px; }
+    .mt-16 { margin-top: 16px; }
+    .mt-24 { margin-top: 24px; }
+    .text-center { text-align: center; }
+
+    /* ── LEVEL BARS ── */
+    .level-bar { display: flex; gap: 4px; margin-top: 4px; }
+    .level-dot {
+      width: 9px; height: 9px; border-radius: 50%;
+      background: #E8D4C4;
+    }
+    .level-dot.filled { background: var(--orange); }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 40px 18px;
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    .empty-emoji { font-size: 3rem; margin-bottom: 12px; display: block; }
+
+    /* ── WAVY DIVIDER ── */
+    .wavy { margin: 36px 0; text-align: center; opacity: 0.25; font-size: 1.6rem; letter-spacing: 0.3em; }
+
+    @media (max-width: 480px) {
+      .food-stats { grid-template-columns: 1fr 1fr; }
+      .midnight-grid { grid-template-columns: 1fr 1fr; }
+      .result-actions { gap: 8px; }
+      .btn-primary { font-size: 1.05rem; padding: 16px 34px; }
+    }
+
+    /* ── SLOT MACHINE OVERLAY ── */
+    #slot-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(45, 26, 14, 0.82);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+    }
+    #slot-overlay.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .slot-box {
+      background: #fff;
+      border-radius: 28px;
+      padding: 36px 48px 32px;
+      text-align: center;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.35);
+      border: 3px solid var(--orange-pale);
+      min-width: 260px;
+      position: relative;
+      overflow: hidden;
+    }
+    .slot-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--orange), var(--yellow), var(--red-soft), var(--orange));
+      background-size: 200% 100%;
+      animation: shimmer 0.6s linear infinite;
+    }
+    @keyframes shimmer {
+      from { background-position: 0% 0%; }
+      to   { background-position: 200% 0%; }
+    }
+
+    .slot-label {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    /* The spinning window */
+    .slot-window {
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: var(--cream);
+      border: 3px solid #F0E4D8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 4px 16px rgba(107,58,42,0.10);
+    }
+
+    #slot-emoji {
+      font-size: 5rem;
+      line-height: 1;
+      display: block;
+      transition: none;
+    }
+    #slot-emoji.spin {
+      animation: emojiSpin 0.12s steps(1) infinite;
+    }
+    #slot-emoji.slow {
+      animation: emojiSpin 0.28s steps(1) infinite;
+    }
+    #slot-emoji.stop {
+      animation: emojiBounce 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+    @keyframes emojiSpin {
+      0%   { transform: scale(1)    rotate(0deg); }
+      25%  { transform: scale(0.85) rotate(-8deg); }
+      50%  { transform: scale(1.1)  rotate(0deg); }
+      75%  { transform: scale(0.85) rotate(8deg); }
+      100% { transform: scale(1)    rotate(0deg); }
+    }
+    @keyframes emojiBounce {
+      0%   { transform: scale(0.5) rotate(-15deg); opacity: 0.4; }
+      60%  { transform: scale(1.2) rotate(6deg);  opacity: 1; }
+      80%  { transform: scale(0.93) rotate(-3deg); }
+      100% { transform: scale(1)   rotate(0deg);  opacity: 1; }
+    }
+
+    #slot-food-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: var(--brown);
+      min-height: 2rem;
+      transition: opacity 0.15s;
+    }
+    #slot-food-name.flash {
+      animation: nameFlash 0.12s steps(1) infinite;
+    }
+    @keyframes nameFlash {
+      0%   { opacity: 1; }
+      50%  { opacity: 0.2; }
+      100% { opacity: 1; }
+    }
+
+    .slot-dots {
+      display: flex;
+      gap: 7px;
+      justify-content: center;
+      margin-top: 18px;
+    }
+    .slot-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #E8D4C4;
+      transition: background 0.2s;
+    }
+    .slot-dot.active { background: var(--orange); }
+
+    /* pulse ring on the window when stopping */
+    .slot-window.pulse-ring::after {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 3px solid var(--orange);
+      animation: ringPulse 0.6s ease-out forwards;
+    }
+    @keyframes ringPulse {
+      from { opacity: 1; transform: scale(1); }
+      to   { opacity: 0; transform: scale(1.25); }
+    }
+
+    /* confetti burst */
+    .confetti-piece {
+      position: fixed;
+      width: 9px; height: 9px;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 1000;
+      animation: confettiFall var(--dur) ease-out forwards;
+    }
+    @keyframes confettiFall {
+      0%   { transform: translate(0,0) rotate(0deg) scale(1); opacity: 1; }
+      100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0.5); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="blob-bg">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- SLOT MACHINE OVERLAY -->
+<div id="slot-overlay" role="status" aria-live="polite" aria-label="Sedang mencari makanan...">
+  <div class="slot-box">
+    <div class="slot-label">🔍 Lagi milih buat kamu...</div>
+    <div class="slot-window" id="slot-window">
+      <span id="slot-emoji">🍜</span>
+    </div>
+    <div id="slot-food-name">...</div>
+    <div class="slot-dots">
+      <div class="slot-dot" id="sd1"></div>
+      <div class="slot-dot" id="sd2"></div>
+      <div class="slot-dot" id="sd3"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- HERO -->
+  <header>
+    <div class="header-badge">🍜 Random Food Generator Indonesia</div>
+    <h1>Hari Ini<br><span>Makan Apa?</span></h1>
+    <p class="subtitle">Biar nggak debat sama diri sendiri.</p>
+    <div class="hero-btns">
+      <button class="btn btn-primary" onclick="randomFood()">🎲 Random Makanan</button>
+      <button class="btn btn-bokek" onclick="modeBokek()">💸 Mode Bokek</button>
+    </div>
+  </header>
+
+  <!-- FILTER -->
+  <section class="filter-section" aria-label="Filter makanan">
+    <h2>⚙️ Sesuaikan dulu ya...</h2>
+
+    <div class="filter-group">
+      <span class="filter-label">💰 Budget</span>
+      <div class="filter-chips" id="filter-budget">
+        <button class="chip active" data-val="all">Semua</button>
+        <button class="chip" data-val="hemat">Hemat (&lt;15rb)</button>
+        <button class="chip" data-val="normal">Normal (15-40rb)</button>
+        <button class="chip" data-val="sultan">Sultan (&gt;40rb)</button>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <span class="filter-label">🕐 Waktu Makan</span>
+      <div class="filter-chips" id="filter-waktu">
+        <button class="chip active" data-val="all">Semua</button>
+        <button class="chip" data-val="sarapan">Sarapan</button>
+        <button class="chip" data-val="siang">Siang</button>
+        <button class="chip" data-val="malam">Malam</button>
+        <button class="chip" data-val="tengah_malam">Tengah Malam</button>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <span class="filter-label">😌 Mood</span>
+      <div class="filter-chips" id="filter-mood">
+        <button class="chip active" data-val="all">Semua</button>
+        <button class="chip" data-val="bokek">Bokek</button>
+        <button class="chip" data-val="laper_berat">Laper Berat</button>
+        <button class="chip" data-val="pedas">Pengen Pedas</button>
+        <button class="chip" data-val="comfort">Comfort Food</button>
+        <button class="chip" data-val="diet">Lagi Diet</button>
+      </div>
+    </div>
+
+    <button class="btn btn-primary mt-16" style="width:100%;justify-content:center;" onclick="randomFood()">
+      🎲 Random Sekarang
+    </button>
+  </section>
+
+  <!-- RESULT -->
+  <section class="result-area" id="result-area" aria-live="polite">
+    <div class="empty-state" id="empty-state">
+      <span class="empty-emoji">🤔</span>
+      Klik tombol di atas buat dapetin rekomendasi!
+    </div>
+  </section>
+
+  <div class="wavy">· · ·</div>
+
+  <!-- TOP 5 -->
+  <section class="top5-section" aria-label="Top 5 makanan aman">
+    <h2 class="section-title">🏆 Top 5 <span>Makanan Aman</span><br>Kalau Bingung</h2>
+    <div class="top5-grid" id="top5-grid"></div>
+  </section>
+
+  <div class="wavy">· · ·</div>
+
+  <!-- MIDNIGHT -->
+  <section class="midnight-section" aria-label="Ide makan tengah malam">
+    <h2 class="section-title">🌙 Ide Makan <span>Tengah Malam</span></h2>
+    <div class="midnight-grid" id="midnight-grid"></div>
+  </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>Dibuat dengan 🧡 untuk perut-perut galau Indonesia</p>
+  <p class="mt-8" style="font-size:0.75rem;opacity:0.6;">Harga estimasi, bisa beda di tiap daerah ya!</p>
+</footer>
+
+<script>
+  // ══════════════════════════════════════════════
+  //  DATA MAKANAN (50+)
+  // ══════════════════════════════════════════════
+  const foods = [
+    {
+      nama: "Nasi Goreng",
+      emoji: "🍳",
+      kategori: "Nasi",
+      harga: "12.000–25.000",
+      budget: "hemat",
+      kenyang: 4,
+      pedas: 2,
+      mood: ["bokek","laper_berat","comfort"],
+      waktu: ["siang","malam","tengah_malam"],
+      alasan: "Klasik nggak ada matinya. Nasi goreng selalu jadi penyelamat di segala situasi!"
+    },
+    {
+      nama: "Mie Ayam",
+      emoji: "🍜",
+      kategori: "Mie",
+      harga: "13.000–22.000",
+      budget: "hemat",
+      kenyang: 4,
+      pedas: 1,
+      mood: ["bokek","laper_berat","comfort"],
+      waktu: ["sarapan","siang","malam"],
+      alasan: "Mangkuk panas, mie kenyal, ayam gurih — combo sempurna buat mood yang lagi biasa-biasa aja."
+    },
+    {
+      nama: "Bakso",
+      emoji: "🥣",
+      kategori: "Sup",
+      harga: "10.000–20.000",
+      budget: "hemat",
+      kenyang: 4,
+      pedas: 1,
+      mood: ["bokek","comfort","laper_berat"],
+      waktu: ["siang","malam","tengah_malam"],
+      alasan: "Kuah kaldu panas + bakso kenyal = peluk di mangkuk. Cocok kapan aja!"
+    },
+    {
+      nama: "Sate Ayam",
+      emoji: "🍢",
+      kategori: "Panggang",
+      harga: "15.000–30.000",
+      budget: "normal",
+      kenyang: 3,
+      pedas: 1,
+      mood: ["comfort","laper_berat"],
+      waktu: ["siang","malam"],
+      alasan: "Sate bakar dengan bumbu kacang yang legit — selalu bikin senang perut dan hati."
+    },
+    {
+      nama: "Ayam Geprek",
+      emoji: "🍗",
+      kategori: "Ayam",
+      harga: "13.000–22.000",
+      budget: "hemat",
+      kenyang: 4,
+      pedas: 5,
+      mood: ["pedas","laper_berat","bokek"],
+      waktu: ["siang","malam"],
+      alasan: "Ayam crispy + sambal geprek dahsyat. Kalau kamu tim pecinta pedas, ini surganya!"
+    },
+    {
+      nama: "Nasi Padang",
+      emoji: "🍛",
+      kategori: "Nasi",
+      harga: "18.000–40.000",
+      budget: "normal",
+      kenyang: 5,
+      pedas: 4,
+      mood: ["laper_berat","comfort","pedas"],
+      waktu: ["siang","malam"],
+      alasan: "Nasi putih dikelilingi lauk-pauk nusantara. Sekali makan, kenyang sampai besok!"
+    },
+    {
+      nama: "Soto Ayam",
+      emoji: "🥘",
+      kategori: "Sup",
+      harga: "12.000–22.000",
+      budget: "hemat",
+      kenyang: 3,
+      pedas: 1,
+      mood: ["comfort","bokek"],
+      waktu: ["sarapan","siang","malam"],
+      alasan: "Kuah bening kuning dengan aroma rempah — cocok buat badan yang butuh kehangatan."
+    },
+    {
+      nama: "Gado-Gado",
+      emoji: "🥗",
+      kategori: "Sayuran",
+      harga: "10.000–18.000",
+      budget: "hemat",
+      kenyang: 3,
+      pedas: 1,
+      mood: ["diet","bokek"],
+      waktu: ["sarapan","siang"],
+      alasan: "Sayuran segar dengan bumbu kacang gurih. Sehat, kenyang, dan dompet aman!"
+    },
+    {
+      nama: "Ketoprak",
+      emoji: "🥙",
+      kategori: "Sayuran",
+      harga: "8.000–15.000",
+      budget: "hemat",
+      kenyang: 3,
+      pedas: 1,
+      mood: ["diet","bokek"],
+      waktu: ["sarapan","siang"],
+      alasan: "Tahu, bihun, sayur, bumbu kacang manis — ringan di perut dan di kantong!"
+    },
+    {
+      nama: "Pecel Lele",
+      emoji: "🐟",
+      kategori: "Lalapan",
+      harga: "12.000–20.000",
+      budget: "hemat",
+      kenyang: 4,
+      pedas: 3,
+      mood: ["bokek","laper_berat","pedas"],
+      waktu: ["malam"],
+      alasan: "Lele goreng garing + sambal + lalapan segar. Kombinasi yang nggak pernah gagal!"
+    },
+    {
+      nama: "Bubur Ayam",
+      emoji: "🥣",
+      kategori: "Bubur",
+      harga: "8.000–18.000",
+      budget: "hemat",
+      kenyang: 3,
+      pedas: 1,
+      mood: ["comfort","bokek"],
+      waktu: ["sarapan"],
+      alasan: "Hangat, lembut, dan menenangkan. Pilihan sempurna untuk memulai pagi yang berat."
+    },
+    {
+      nama: "Rawon",
+      emoji: "🍲",
+      kategori: "Sup",
+      harga: "18.000–35.000",
+      budget: "normal",
+      kenyang: 5,
+      pedas: 2,
+      mood: ["comfort","laper_berat"],
+      waktu: ["siang","malam"],
+      alasan: "Sup hitam khas Jawa Timur dengan daging sapi empuk. Legit banget rasanya!"
+    },
+    {
+      nama: "Rendang",
+      emoji: "🥩",
+      kategori: "Daging",
+      harga: "25.000–45.000",
+      budget: "sultan",
+      kenyang: 4,
+      pedas: 3,
+      mood: ["comfort","laper_berat","pedas"],
+      waktu: ["siang","malam"],
+      alasan: "Masakan terenak se-dunia (versi kamu dan UNESCO). Sekali makan, langsung bahagia!"
+    },
+    {
+      nama: "Martabak Manis",
+      emoji: "🥞",
+      kategori: "Jajanan",
+      harga: "20.000–40.000",
+      budget: "normal",
+      kenyang: 3,
+      pedas: 0,
+      mood: ["comfort"],
+      waktu: ["malam","tengah_malam"],
+      alasan: "Tebal, legit, dan penuh topping. Khusus buat kamu yang butuh sugar rush malam-malam!"
+    },
+    {
+      nama: "Seblak",
+      emoji: "🌶️",
+      kategori: "Jajanan Pedas",
+      harga: "12.000–22.000",
+      budget: "hemat",
+      kenyang: 3,
+      pedas: 5,
+      mood: ["pedas","tengah_malam"],
+      waktu: ["malam","tengah_malam"],
+      alasan: "Pedas, kencur, dan addictive abis. Kalau berani tantang lidah, seblak jawabannya!"
+    },
+    {
+      nama: "Dimsum",
+      emoji: "🥟",
+      kategori: "Chinese",
+      harga: "15.000–35.000",
+      budget: "normal",
+      kenyang: 3,
+      pedas: 1,
+      mood: ["comfort","bokek"],
+      waktu: ["sarapan","siang"],
+      alasan: "Kukus, goreng, atau bakar — dimsum selalu enak dan cocok buat santai bareng teman."
+    },
+    {
+      nama: "Ramen",
+      emoji: "🍜",
+      kategori: "Japanese",
+      harga: "25.000–60.000",
+      budget: "sultan",
+      kenyang: 4,
+      pedas: 2,
+      mood: ["comfort","laper_berat"],
+      waktu: ["siang","malam"],
+      alasan: "Kuah rich, mie kenyal, topping melimpah. Worth it banget buat mood booster!"
+    },
+    {
+      nama: "Burger",
+      emoji: "🍔",
+      kategori: "Western",
+      harga: "20.000–55.000",
+      budget: "normal",
+      kenyang: 4,
+      pedas: 1,
+      mood: ["comfort","laper_berat"],
+      waktu: ["siang","malam"],
+      alasan: "Daging juicy, saus, sayur, roti — simple tapi selalu memuaskan!"
+    },
+    {
+      nama: "Kebab",
+      emoji: "🌯",
+      kategori: "Middle East",
+      harga: "12.000–25.000",
+      budget: "hemat",
+      kenyang: 3,
+      pedas: 2,
+      mood: ["bokek","comfort"],
+      waktu: ["malam","tengah_malam"],
+      alasan: "Daging sapi, sayur, saus — all in one roti. Murah, enak, dan mengenyangkan!"
+    },
+    {
+      nama: "Nasi Warteg",
+      emoji: "🍱",
+      kategori: "Nasi",
+      harga: "7.000–15.000",
+      budget: "hemat",
+      kenyang: 4,
+      pedas: 2,
+      mood: ["bokek","laper_berat"],
+      waktu: ["sarapan","siang","malam"],
+      alasan: "Raja makanan rakyat. Murah meriah, lauk pilihan, nggak ada yang ngalahin warteg!"
+    },
+    {
+      nama: "Nasi Uduk",
+      emoji: "🍚",
+      kategori: "Nasi",
+      harga: "10.000–20.000",
+      budget: "hemat",
+      kenyang: 4,
+      pedas: 2,
+      mood: ["sarapan","bokek","comfort"],
+      waktu: ["sarapan"],
+      alasan: "Nasi gurih santan dengan lauk lengkap — sarapan terfavorit orang Jakarta!"
+    },
+    {
+      nama: "Nasi Kuning",
+      emoji: "🌟",
+      kategori: "Nasi",
+      harga: "10.000–20.000",
+      budget: "hemat",
+      kenyang: 4,
+      pedas: 1,
+      mood: ["comfort","bokek"],
+      waktu: ["sarapan"],
+      alasan: "Nasi kunyit wangi dengan aneka lauk — cocok buat sarapan yang bikin hari lebih cerah!"
+    },
+    {
+      nama: "Ayam Penyet",
+      emoji: "🍗",
+      kategori: "Ayam",
+      harga: "15.000–25.000",
+      budget: "hemat",
+      kenyang: 4,
+      pedas: 4,
+      mood: ["pedas","laper_berat"],
+      waktu: ["siang","malam"],
+      alasan: "Ayam goreng geprek + sambal bawang pedas = kombo yang bikin ketagihan!"
+    },
+    {
+      nama: "Cilok",
+      emoji: "🟤",
+      kategori: "Jajanan",
+      harga: "3.000–8.000",
+      budget: "hemat",
+      kenyang: 2,
+      pedas: 2,
+      mood: ["bokek"],
+      waktu: ["siang","malam"],
+      alasan: "Camilan kenyal favorit semua umur. Murah banget, cocok buat ngemil santai!"
+    },
+    {
+      nama: "Batagor",
+      emoji: "🥜",
+      kategori: "Jajanan",
+      harga: "8.000–18.000",
+      budget: "hemat",
+      kenyang: 3,
+      pedas: 1,
+      mood: ["bokek","comfort"],
+      waktu: ["siang"],
+      alasan: "Bakso tahu goreng + bumbu kacang + kecap. Klasik Bandung yang nggak ada matinya!"
+    },
+    {
+      nama: "Siomay",
+      emoji: "🥟",
+      kategori: "Jajanan",
+      harga: "8.000–18.000",
+      budget: "hemat",
+      kenyang: 3,
+      pedas: 1,
+      mood: ["bokek","diet"],
+      waktu: ["siang"],
+      alasan: "Kukus, ringan, dan bumbu kacang manisnya pas banget. Diet-friendly versi Indonesia!"
+    },
+    {
+      nama: "Mie Instan Custom",
+      emoji: "🍝",
+      kategori: "Mie",
+      harga: "3.000–10.000",
+      budget: "hemat",
+      kenyang: 3,
+      pedas: 3,
+      mood: ["bokek","tengah_malam"],
+      waktu: ["tengah_malam","malam"],
+      alasan: "Sang penyelamat akhir bulan. Tambahin telur dan keju, auto upgrade jadi mewah!"
+    },
+    {
+      nama: "Nasi Telur",
+      emoji: "🥚",
+      kategori: "Nasi",
+      harga: "7.000–12.000",
+      budget: "hemat",
+      kenyang: 3,
+      pedas: 1,
+      mood: ["bokek"],
+      waktu: ["sarapan","siang","malam"],
+      alasan: "Simpel, budget banget, tapi dengan kecap dan sambal yang benar — ini surga rasa!"
+    },
+    {
+      nama: "Chicken Katsu",
+      emoji: "🍱",
+      kategori: "Japanese",
+      harga: "20.000–40.000",
+      budget: "normal",
+      kenyang: 4,
+      pedas: 0,
+      mood: ["comfort","laper_berat"],
+      waktu: ["siang","malam"],
+      alasan: "Ayam crispy dengan saus katsu yang khas — mood booster terbaik untuk hari yang panjang!"
+    },
+    {
+      nama: "Rice Bowl",
+      emoji: "🍚",
+      kategori: "Fusion",
+      harga: "18.000–35.000",
+      budget: "normal",
+      kenyang: 4,
+      pedas: 1,
+      mood: ["comfort","diet","laper_berat"],
+      waktu: ["siang","malam"],
+      alasan: "Praktis, bisa dikustomisasi, dan biasanya sehat. Solusi modern buat makan siang!"
+    },
+    {
+      nama: "Pempek",
+      emoji: "🐠",
+      kategori: "Palembang",
+      harga: "15.000–30.000",
+      budget: "normal",
+      kenyang: 3,
+      pedas: 2,
+      mood: ["comfort","bokek"],
+      waktu: ["siang","malam"],
+      alasan: "Ikan + cuko asam manis pedas = kombinasi yang susah dilupakan! Oleh-oleh Palembang terbaik."
+    },
+    {
+      nama: "Tahu Tek",
+      emoji: "🥜",
+      kategori: "Jajanan",
+      harga: "8.000–15.000",
+      budget: "hemat",
+      kenyang: 3,
+      pedas: 2,
+      mood: ["bokek","comfort"],
+      waktu: ["siang","malam"],
+      alasan: "Tahu goreng + lontong + bumbu petis khas Surabaya. Murah meriah, enak luar biasa!"
+    },
+    {
+      nama: "Sop Buntut",
+      emoji: "🥩",
+      kategori: "Sup",
+      harga: "35.000–65.000",
+      budget: "sultan",
+      kenyang: 5,
+      pedas: 1,
+      mood: ["comfort","laper_berat"],
+      waktu: ["siang","malam"],
+      alasan: "Kuah bening gurih dengan tulang buntut empuk. Worth it banget buat treat diri sendiri!"
+    },
+    {
+      nama: "Lontong Sayur",
+      emoji: "🥦",
+      kategori: "Sayuran",
+      harga: "8.000–15.000",
+      budget: "hemat",
+      kenyang: 3,
+      pedas: 1,
+      mood: ["bokek","diet","comfort"],
+      waktu: ["sarapan"],
+      alasan: "Sarapan Betawi yang legendaris! Lontong + sayur labu + santan = duo sempurna pagi hari."
+    },
+    {
+      nama: "Capcay",
+      emoji: "🥬",
+      kategori: "Chinese",
+      harga: "15.000–25.000",
+      budget: "hemat",
+      kenyang: 3,
+      pedas: 1,
+      mood: ["diet","comfort"],
+      waktu: ["siang","malam"],
+      alasan: "Sayur melimpah, saus tiram gurih, sehat dan tetap lezat. Pilihan bijak kalau lagi diet!"
+    },
+    {
+      nama: "Kwetiau Goreng",
+      emoji: "🍜",
+      kategori: "Chinese",
+      harga: "15.000–28.000",
+      budget: "hemat",
+      kenyang: 4,
+      pedas: 2,
+      mood: ["laper_berat","comfort"],
+      waktu: ["siang","malam","tengah_malam"],
+      alasan: "Kwetiau lebar + kecap manis + irisan daging — bikin kenyang dan bahagia sekaligus!"
+    },
+    {
+      nama: "Seafood Bakar",
+      emoji: "🦐",
+      kategori: "Seafood",
+      harga: "35.000–80.000",
+      budget: "sultan",
+      kenyang: 5,
+      pedas: 3,
+      mood: ["laper_berat","comfort"],
+      waktu: ["malam"],
+      alasan: "Udang, cumi, ikan bakar dengan bumbu rica-rica. Special dinner yang worth every penny!"
+    },
+    {
+      nama: "Bebek Goreng",
+      emoji: "🦆",
+      kategori: "Unggas",
+      harga: "22.000–38.000",
+      budget: "normal",
+      kenyang: 4,
+      pedas: 3,
+      mood: ["laper_berat","pedas"],
+      waktu: ["siang","malam"],
+      alasan: "Bebek goreng empuk + sambal hijau / hitam. Kombinasi yang bikin nagih tiap hari!"
+    },
+    {
+      nama: "Ayam Bakar",
+      emoji: "🍗",
+      kategori: "Panggang",
+      harga: "18.000–32.000",
+      budget: "normal",
+      kenyang: 4,
+      pedas: 2,
+      mood: ["comfort","laper_berat"],
+      waktu: ["siang","malam"],
+      alasan: "Ayam yang dimarinasi bumbu rempah dan dibakar sempurna. Harumnya menggoda jiwa!"
+    },
+    {
+      nama: "Iga Bakar",
+      emoji: "🥓",
+      kategori: "Daging",
+      harga: "45.000–90.000",
+      budget: "sultan",
+      kenyang: 5,
+      pedas: 1,
+      mood: ["laper_berat"],
+      waktu: ["malam"],
+      alasan: "Iga sapi bakar dengan saus BBQ khas Indonesia. Treat dirimu yang paling proper!"
+    },
+    {
+      nama: "Nasi Campur Bali",
+      emoji: "🍱",
+      kategori: "Bali",
+      harga: "15.000–30.000",
+      budget: "normal",
+      kenyang: 4,
+      pedas: 3,
+      mood: ["comfort","laper_berat","pedas"],
+      waktu: ["siang","malam"],
+      alasan: "Nasi + sate lilit + lawar + betutu. Cita rasa Bali yang bikin kangen pulau dewata!"
+    },
+    {
+      nama: "Nasi Liwet",
+      emoji: "🍚",
+      kategori: "Nasi",
+      harga: "15.000–28.000",
+      budget: "normal",
+      kenyang: 4,
+      pedas: 1,
+      mood: ["comfort","laper_berat"],
+      waktu: ["siang","malam"],
+      alasan: "Nasi gurih santan khas Solo dengan opor, sambal, dan lauk. Ini namanya kebahagiaan!"
+    },
+    {
+      nama: "Mie Aceh",
+      emoji: "🌶️",
+      kategori: "Mie",
+      harga: "20.000–35.000",
+      budget: "normal",
+      kenyang: 4,
+      pedas: 5,
+      mood: ["pedas","laper_berat"],
+      waktu: ["siang","malam"],
+      alasan: "Mie tebal dengan kuah rempah-rempah super kuat khas Aceh. Pedasnya juara, kenyangnya nyata!"
+    },
+    {
+      nama: "Kerak Telor",
+      emoji: "🥚",
+      kategori: "Jajanan",
+      harga: "15.000–25.000",
+      budget: "hemat",
+      kenyang: 2,
+      pedas: 1,
+      mood: ["comfort"],
+      waktu: ["siang"],
+      alasan: "Jajanan legendaris Betawi yang cuma ada pas event khusus. Nostalgia banget rasanya!"
+    },
+    {
+      nama: "Roti Bakar",
+      emoji: "🍞",
+      kategori: "Jajanan",
+      harga: "8.000–18.000",
+      budget: "hemat",
+      kenyang: 2,
+      pedas: 0,
+      mood: ["bokek","comfort"],
+      waktu: ["sarapan","tengah_malam"],
+      alasan: "Roti tebal dibakar dengan mentega + selai cokelat atau keju. Comfort food sejati malam hari!"
+    },
+    {
+      nama: "Salad Buah",
+      emoji: "🥗",
+      kategori: "Sehat",
+      harga: "12.000–22.000",
+      budget: "hemat",
+      kenyang: 2,
+      pedas: 0,
+      mood: ["diet"],
+      waktu: ["siang","malam"],
+      alasan: "Segar, sehat, dan ringan di perut. Pilihan tepat kalau lagi serius mau diet!"
+    },
+    {
+      nama: "Grilled Chicken",
+      emoji: "🍗",
+      kategori: "Sehat",
+      harga: "22.000–40.000",
+      budget: "normal",
+      kenyang: 4,
+      pedas: 1,
+      mood: ["diet","laper_berat"],
+      waktu: ["siang","malam"],
+      alasan: "Protein tinggi, kalori terkontrol. Buat yang diet tapi tetap mau kenyang — ini pilihan tepat!"
+    },
+    {
+      nama: "Tempe Penyet",
+      emoji: "🌿",
+      kategori: "Vegetarian",
+      harga: "8.000–15.000",
+      budget: "hemat",
+      kenyang: 3,
+      pedas: 3,
+      mood: ["bokek","pedas","diet"],
+      waktu: ["siang","malam"],
+      alasan: "Tempe goreng geprek + sambal. Murah, bergizi, dan untuk pecinta sambal, ini surganya!"
+    },
+    {
+      nama: "Telur Geprek",
+      emoji: "🍳",
+      kategori: "Telur",
+      harga: "8.000–15.000",
+      budget: "hemat",
+      kenyang: 3,
+      pedas: 4,
+      mood: ["bokek","pedas"],
+      waktu: ["siang","malam"],
+      alasan: "Telur ceplok + sambal geprek dahsyat. Super hemat, super pedas, super memuaskan!"
+    },
+    {
+      nama: "Mie Tek-Tek",
+      emoji: "🍜",
+      kategori: "Mie",
+      harga: "10.000–18.000",
+      budget: "hemat",
+      kenyang: 3,
+      pedas: 2,
+      mood: ["bokek","tengah_malam","comfort"],
+      waktu: ["malam","tengah_malam"],
+      alasan: "Abang mie gerobak yang jadi penyelamat malam. Suara 'tek-tek'-nya aja bikin lapar!"
+    },
+    {
+      nama: "Sushi Lokal",
+      emoji: "🍱",
+      kategori: "Japanese Fusion",
+      harga: "20.000–50.000",
+      budget: "normal",
+      kenyang: 3,
+      pedas: 1,
+      mood: ["comfort"],
+      waktu: ["siang","malam"],
+      alasan: "Versi Indonesia dari sushi — kreatif, enak, dan lebih terjangkau dari yang aslinya!"
+    },
+    {
+      nama: "Nasi Goreng Seafood",
+      emoji: "🦑",
+      kategori: "Nasi",
+      harga: "22.000–40.000",
+      budget: "normal",
+      kenyang: 4,
+      pedas: 2,
+      mood: ["laper_berat","comfort"],
+      waktu: ["malam"],
+      alasan: "Upgrade dari nasi goreng biasa dengan udang, cumi, dan scallop. Level naik, harga worth it!"
+    },
+    {
+      nama: "Tongseng Kambing",
+      emoji: "🐐",
+      kategori: "Daging",
+      harga: "25.000–45.000",
+      budget: "sultan",
+      kenyang: 5,
+      pedas: 3,
+      mood: ["laper_berat","comfort","pedas"],
+      waktu: ["siang","malam"],
+      alasan: "Kambing + kuah kecap rempah manis gurih pedas. Khas warung tenda yang legendaris!"
+    },
+    {
+      nama: "Klepon",
+      emoji: "🟢",
+      kategori: "Kue Tradisional",
+      harga: "5.000–10.000",
+      budget: "hemat",
+      kenyang: 1,
+      pedas: 0,
+      mood: ["comfort"],
+      waktu: ["siang","malam"],
+      alasan: "Kue hijau kenyal berisi gula aren yang 'mbledos' di mulut. Nostalgia masa kecil!"
+    },
+    {
+      nama: "Coto Makassar",
+      emoji: "🥘",
+      kategori: "Sup",
+      harga: "20.000–35.000",
+      budget: "normal",
+      kenyang: 4,
+      pedas: 2,
+      mood: ["comfort","laper_berat"],
+      waktu: ["sarapan","siang"],
+      alasan: "Sup daging sapi + jeroan khas Makassar dengan ketupat. Kaya rempah dan bikin nagih!"
+    },
+    {
+      nama: "Papeda",
+      emoji: "🍶",
+      kategori: "Indonesia Timur",
+      harga: "15.000–25.000",
+      budget: "hemat",
+      kenyang: 4,
+      pedas: 2,
+      mood: ["comfort","laper_berat"],
+      waktu: ["siang","malam"],
+      alasan: "Makanan pokok Papua yang unik — sagu kenyal + ikan kuah kuning. Pengalaman makan yang beda!"
+    }
+  ];
+
+  // ══════════════════════════════════════════════
+  //  TOP 5 & MIDNIGHT DATA
+  // ══════════════════════════════════════════════
+  const top5 = [
+    { nama: "Nasi Goreng",     emoji: "🍳", desc: "Selalu ada, selalu enak, selalu aman" },
+    { nama: "Mie Ayam",        emoji: "🍜", desc: "Mangkuk panas penyelamat hari galau" },
+    { nama: "Bakso",           emoji: "🥣", desc: "Kuah kaldu hangat yang memeluk jiwa" },
+    { nama: "Ayam Geprek",     emoji: "🍗", desc: "Pedas crispy yang bikin nagih setiap hari" },
+    { nama: "Nasi Warteg",     emoji: "🍱", desc: "Raja makan hemat dengan lauk variatif" }
+  ];
+
+  const midnight = [
+    { nama: "Mie Instan Custom", emoji: "🍝", note: "Tambahin telur + keju = upgrade sultan" },
+    { nama: "Mie Tek-Tek",       emoji: "🍜", note: "Dengerin suara tek-teknya bikin lapar" },
+    { nama: "Seblak",            emoji: "🌶️", note: "Pedasnya ngusir kantuk lebih efektif" },
+    { nama: "Kebab",             emoji: "🌯", note: "Gerobak kebab yang nemenin begadang" },
+    { nama: "Roti Bakar",        emoji: "🍞", note: "Mentega + cokelat = comfort abis" },
+    { nama: "Nasi Goreng",       emoji: "🍳", note: "Klasik yang nggak pernah salah jam berapapun" }
+  ];
+
+  // ══════════════════════════════════════════════
+  //  FILTER STATE
+  // ══════════════════════════════════════════════
+  const filters = { budget: 'all', waktu: 'all', mood: 'all' };
+
+  // ══════════════════════════════════════════════
+  //  INIT
+  // ══════════════════════════════════════════════
+  document.addEventListener('DOMContentLoaded', () => {
+    setupChips('filter-budget', 'budget');
+    setupChips('filter-waktu',  'waktu');
+    setupChips('filter-mood',   'mood');
+    renderTop5();
+    renderMidnight();
+  });
+
+  function setupChips(groupId, filterKey) {
+    const group = document.getElementById(groupId);
+    group.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        group.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        filters[filterKey] = chip.dataset.val;
+      });
+    });
+  }
+
+  // ══════════════════════════════════════════════
+  //  FILTER LOGIC
+  // ══════════════════════════════════════════════
+  function getFiltered() {
+    return foods.filter(f => {
+      if (filters.budget !== 'all' && f.budget !== filters.budget) return false;
+      if (filters.waktu  !== 'all' && !f.waktu.includes(filters.waktu))  return false;
+      if (filters.mood   !== 'all' && !f.mood.includes(filters.mood))    return false;
+      return true;
+    });
+  }
+
+  // ══════════════════════════════════════════════
+  //  RANDOM FOOD + SLOT MACHINE ANIMATION
+  // ══════════════════════════════════════════════
+  let lastFood = null;
+  let slotRunning = false;
+
+  // All emojis pool for the spinning phase
+  const allEmojis = foods.map(f => f.emoji);
+
+  function randomFood() {
+    if (slotRunning) return;
+
+    const pool = getFiltered();
+    let candidates = pool.filter(f => f !== lastFood);
+    if (!candidates.length) candidates = pool;
+
+    const area = document.getElementById('result-area');
+
+    if (!candidates.length) {
+      area.innerHTML = `
+        <div class="fallback-card">
+          <span class="fallback-emoji">🤷</span>
+          <h3>Filter kamu terlalu spesifik,<br>makanan aja bingung.</h3>
+          <p class="mt-8">Coba longgarkan filter di atas ya!</p>
+        </div>`;
+      return;
+    }
+
+    const chosen = candidates[Math.floor(Math.random() * candidates.length)];
+    runSlotMachine(chosen, () => {
+      lastFood = chosen;
+      renderResult(chosen);
+      setTimeout(() => area.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+    });
+  }
+
+  function runSlotMachine(finalFood, onDone) {
+    slotRunning = true;
+    const overlay  = document.getElementById('slot-overlay');
+    const emojiEl  = document.getElementById('slot-emoji');
+    const nameEl   = document.getElementById('slot-food-name');
+    const win      = document.getElementById('slot-window');
+    const dots     = [document.getElementById('sd1'), document.getElementById('sd2'), document.getElementById('sd3')];
+
+    // reset
+    dots.forEach(d => d.classList.remove('active'));
+    win.classList.remove('pulse-ring');
+    emojiEl.className = '';
+    nameEl.className  = '';
+    nameEl.textContent = '...';
+
+    overlay.classList.add('visible');
+
+    // ── Phase 1: fast spin (0–900ms) ──
+    emojiEl.classList.add('spin');
+    nameEl.classList.add('flash');
+
+    let spinIdx = 0;
+    const fastInterval = setInterval(() => {
+      spinIdx = (spinIdx + 1) % allEmojis.length;
+      emojiEl.textContent = allEmojis[spinIdx];
+      nameEl.textContent  = foods[spinIdx].nama;
+    }, 80);
+
+    // dot 1 lights up at 300ms
+    setTimeout(() => dots[0].classList.add('active'), 300);
+
+    // ── Phase 2: slow down (900–1500ms) ──
+    setTimeout(() => {
+      clearInterval(fastInterval);
+      emojiEl.className = 'slow';
+      nameEl.className  = 'flash';
+
+      let slowIdx = spinIdx;
+      const slowInterval = setInterval(() => {
+        slowIdx = (slowIdx + 1) % allEmojis.length;
+        emojiEl.textContent = allEmojis[slowIdx];
+        nameEl.textContent  = foods[slowIdx].nama;
+      }, 220);
+
+      dots[1].classList.add('active');
+
+      // ── Phase 3: stop on final (1500ms) ──
+      setTimeout(() => {
+        clearInterval(slowInterval);
+        dots[2].classList.add('active');
+
+        // snap to final food
+        emojiEl.className   = '';
+        nameEl.className    = '';
+        emojiEl.textContent = finalFood.emoji;
+        nameEl.textContent  = finalFood.nama;
+
+        // bounce + ring
+        void emojiEl.offsetWidth; // reflow
+        emojiEl.classList.add('stop');
+        win.classList.add('pulse-ring');
+
+        launchConfetti();
+
+        // ── Phase 4: hide overlay and show result (2050ms) ──
+        setTimeout(() => {
+          overlay.classList.remove('visible');
+          slotRunning = false;
+          onDone();
+        }, 520);
+
+      }, 600);
+    }, 900);
+  }
+
+  // ── Confetti burst ──
+  function launchConfetti() {
+    const colors = ['#FF6B2C','#FFCA3A','#E84040','#3DAA6C','#fff','#FF9A62'];
+    const cx = window.innerWidth  / 2;
+    const cy = window.innerHeight / 2;
+
+    for (let i = 0; i < 28; i++) {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      const angle = (Math.random() * 360) * (Math.PI / 180);
+      const dist  = 80 + Math.random() * 160;
+      el.style.cssText = `
+        left: ${cx}px; top: ${cy}px;
+        background: ${colors[Math.floor(Math.random() * colors.length)]};
+        border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+        --dx: ${Math.cos(angle) * dist}px;
+        --dy: ${Math.sin(angle) * dist}px;
+        --rot: ${Math.random() * 720 - 360}deg;
+        --dur: ${0.55 + Math.random() * 0.45}s;
+      `;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1100);
+    }
+  }
+
+  function modeBokek() {
+    // set filter hemat lalu random
+    document.querySelectorAll('#filter-budget .chip').forEach(c => {
+      c.classList.toggle('active', c.dataset.val === 'hemat');
+    });
+    filters.budget = 'hemat';
+    randomFood();
+    showToast("💸 Mode Bokek aktif! Dompet aman.");
+  }
+
+  // ══════════════════════════════════════════════
+  //  RENDER RESULT
+  // ══════════════════════════════════════════════
+  function dots(filled, max = 5) {
+    let html = '<div class="level-bar">';
+    for (let i = 1; i <= max; i++) {
+      html += `<div class="level-dot${i <= filled ? ' filled' : ''}"></div>`;
+    }
+    return html + '</div>';
+  }
+
+  function renderResult(food) {
+    const shareText = encodeURIComponent(`Hari ini aku makan ${food.nama}! 🍴\nRekomendasi dari hariiinimakananapa.id`);
+    const waUrl = `https://wa.me/?text=${shareText}`;
+
+    const copyText = `🍽 Hari ini makan: ${food.nama}\n📦 Kategori: ${food.kategori}\n💰 Harga: Rp ${food.harga}\n🍴 Kenyang: ${food.kenyang}/5\n🌶 Pedas: ${food.pedas}/5\n💬 ${food.alasan}`;
+
+    document.getElementById('result-area').innerHTML = `
+      <div class="result-card" id="result-card">
+        <span class="food-emoji">${food.emoji}</span>
+        <div class="food-name">${food.nama}</div>
+        <div class="food-category">${food.kategori}</div>
+
+        <div class="food-stats">
+          <div class="stat-item">
+            <div class="stat-label">💰 Estimasi Harga</div>
+            <div class="stat-value">Rp ${food.harga}</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">🍴 Level Kenyang</div>
+            <div class="stat-value">${dots(food.kenyang)}</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">🌶️ Level Pedas</div>
+            <div class="stat-value">${food.pedas === 0 ? 'Tidak pedas' : dots(food.pedas)}</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">😊 Cocok Buat</div>
+            <div class="stat-value">${food.waktu.map(capitalize).join(', ')}</div>
+          </div>
+        </div>
+
+        <div class="food-reason">💬 ${food.alasan}</div>
+
+        <div class="result-actions">
+          <button class="btn btn-primary" onclick="randomFood()">🎲 Random Lagi</button>
+          <button class="btn btn-secondary btn-sm" onclick="copyResult(${JSON.stringify(copyText).replace(/'/g,"&#39;")})">📋 Copy</button>
+          <a class="btn btn-bokek btn-sm" href="${waUrl}" target="_blank" rel="noopener">📲 Share WA</a>
+        </div>
+      </div>`;
+  }
+
+  function copyResult(text) {
+    navigator.clipboard.writeText(text).then(() => showToast("✅ Disalin ke clipboard!")).catch(() => showToast("❌ Gagal copy, coba lagi."));
+  }
+
+  // ══════════════════════════════════════════════
+  //  RENDER TOP 5 & MIDNIGHT
+  // ══════════════════════════════════════════════
+  function renderTop5() {
+    const grid = document.getElementById('top5-grid');
+    grid.innerHTML = top5.map((item, i) => `
+      <div class="top5-item">
+        <div class="top5-rank">${i + 1}</div>
+        <div class="top5-emoji">${item.emoji}</div>
+        <div class="top5-info">
+          <div class="top5-name">${item.nama}</div>
+          <div class="top5-desc">${item.desc}</div>
+        </div>
+      </div>`).join('');
+  }
+
+  function renderMidnight() {
+    const grid = document.getElementById('midnight-grid');
+    grid.innerHTML = midnight.map(item => `
+      <div class="midnight-card">
+        <span class="midnight-card-emoji">${item.emoji}</span>
+        <div class="midnight-card-name">${item.nama}</div>
+        <div class="midnight-card-note">${item.note}</div>
+      </div>`).join('');
+  }
+
+  // ══════════════════════════════════════════════
+  //  TOAST
+  // ══════════════════════════════════════════════
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+  }
+
+  // ══════════════════════════════════════════════
+  //  UTILS
+  // ══════════════════════════════════════════════
+  function capitalize(str) {
+    return str.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  }
+</script>
+</body>
+</html>
